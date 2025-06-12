@@ -2,6 +2,9 @@ import UserData from '../modules/UsersData.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
+const refreshTokenArray=[]   // temp  array to store the tokens
+
 //  controller for registering the users
 const RegisterUser = async (req, res) => {
     try {
@@ -34,9 +37,11 @@ const LoginUser = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid password" })
         }
-
-        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "1h" })
-        res.json({ token });
+          
+        const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "15min" });
+        const refreshToken=jwt.sign({id:user._id},process.env.JWT_REFRESH_SECRET,{expiresIn:"2h"})
+        refreshTokenArray.push(refreshToken)
+        res.json({ accessToken,refreshToken });
     } catch (error) {
 res.status(500).json({ msg: "Server error", error: error.message })
     }
