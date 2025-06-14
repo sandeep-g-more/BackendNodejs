@@ -70,6 +70,8 @@ import { connectionDB } from './database/db.js';
 import { logReqRes } from './middleware/index.js';
 import urlRouter from './routes/urlShortnerRoute.js';
 import authRoute from './routes/AuthRoute.js';
+import protectedRouter from "./routes/protected.js";
+
 const app = express();
 const PORT = 8000
 app.use(express.urlencoded({ extends: false }))
@@ -82,7 +84,7 @@ connectionDB()
 app.use('/user',userRouter)
 app.use('/url',urlRouter)
 app.use('/auth',authRoute)
-
+app.use('/protected', protectedRouter);
 // middleware plugin
 app.use(logReqRes('log.txt'))
 // Start the server
